@@ -1,7 +1,6 @@
 import hash from 'object-hash';
-import { FeatureCollection } from 'geojson';
-import { Type, TSchema } from '@sinclair/typebox';
-import ETL, { Event, SchemaType, handler as internal, local, env } from '@tak-ps/etl';
+import { Static, Type, TSchema } from '@sinclair/typebox';
+import ETL, { Event, SchemaType, handler as internal, local, DataFlowType, InvocationType, InputFeatureCollection } from '@tak-ps/etl';
 
 const Environment = Type.Object({
     URL: Type.String(),
@@ -20,9 +19,20 @@ const Environment = Type.Object({
 });
 
 export default class Task extends ETL {
-    async schema(type: SchemaType = SchemaType.Input): Promise<TSchema> {
-        if (type === SchemaType.Input) {
-            return Environment
+    static name = 'etl-geojson';
+    static flow = [ DataFlowType.Incoming ];
+    static invocation = [ InvocationType.Schedule ];
+
+    async schema(
+        type: SchemaType = SchemaType.Input,
+        flow: DataFlowType = DataFlowType.Incoming
+    ): Promise<TSchema> {
+        if (flow === DataFlowType.Incoming) {
+            if (type === SchemaType.Input) {
+                return Environment
+            } else {
+                return Type.Object({})
+            }
         } else {
             return Type.Object({})
         }
@@ -54,7 +64,7 @@ export default class Task extends ETL {
             throw new Error('Only FeatureCollection is supported');
         }
 
-        const fc: FeatureCollection = {
+        const fc: Static<typeof InputFeatureCollection> = {
             type: 'FeatureCollection',
             features: []
         };
@@ -78,9 +88,8 @@ export default class Task extends ETL {
     }
 }
 
-env(import.meta.url)
-await local(new Task(), import.meta.url);
+await local(new Task(import.meta.url), import.meta.url);
 export async function handler(event: Event = {}) {
-    return await internal(new Task(), event);
+    return await internal(new Task(import.meta.url), event);
 }
 

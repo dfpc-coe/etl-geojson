@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.4.0
+
+- :tada: Add Capabilities API
+
 ### v1.3.0
 
 - :rocket: Add ability to remove ID
