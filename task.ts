@@ -74,14 +74,30 @@ export default class Task extends ETL {
 
             if (!feat.geometry) continue;
 
-            fc.features.push({
-                id: feat.id || hash(feat),
-                type: 'Feature',
-                properties: {
-                    metadata: feat.properties
-                },
-                geometry: feat.geometry
-            });
+            if (feat.geometry.type.startsWith('Multi')) {
+                feat.geometry.coordinates.forEach((coords: any, idx: number) => {
+                    fc.features.push({
+                        id: feat.id ? feat.id + "-" + idx : hash(coords),
+                        type: 'Feature',
+                        properties: {
+                            metadata: feat.properties
+                        },
+                        geometry: {
+                            type: feat.geometry.type.replace('Multi', ''),
+                            coordinates: coords
+                        }
+                    });
+                });
+            } else {
+                fc.features.push({
+                    id: feat.id || hash(feat),
+                    type: 'Feature',
+                    properties: {
+                        metadata: feat.properties
+                    },
+                    geometry: feat.geometry
+                })
+            }
         }
 
         console.log(`ok - obtained ${fc.features.length} features`);

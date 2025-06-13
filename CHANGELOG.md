@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.2.0
+
+- :tada: Handle MultiGeometries
+
 ### v2.1.0
 
 - :tada: Add Invalid Geometry Filtering
