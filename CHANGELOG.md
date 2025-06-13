@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.1.0
+
+- :tada: Add Invalid Geometry Filtering
+
 ### v2.0.0
 
 - :tada: Update to `CloudTAK@v6`

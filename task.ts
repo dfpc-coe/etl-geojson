@@ -72,6 +72,8 @@ export default class Task extends ETL {
         for (const feat of body.features) {
             if (env.RemoveID) delete feat.id;
 
+            if (!feat.geometry) continue;
+
             fc.features.push({
                 id: feat.id || hash(feat),
                 type: 'Feature',
