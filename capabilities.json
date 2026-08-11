@@ -1,0 +1,27 @@
+{
+    "version": "1.0",
+    "name": "GeoJSON",
+    "description": "Fetches GeoJSON from a configurable HTTP endpoint and posts the features to the map.",
+    "compute": {
+        "memory": 512,
+        "timeout": 60
+    },
+    "permissions": [
+        {
+            "resource": "feature:*",
+            "required": true,
+            "description": "Posts features fetched from the configured GeoJSON endpoint to the map"
+        }
+    ],
+    "invocations": {
+        "incoming": {
+            "schedule": {
+                "description": "Polls the configured GeoJSON endpoint for updated features on a schedule.",
+                "default": {
+                    "enabled": true,
+                    "schedule": "rate(1 minute)"
+                }
+            }
+        }
+    }
+}
